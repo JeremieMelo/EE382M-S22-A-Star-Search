@@ -1,3 +1,7 @@
+*jg68999.py
+jg68999/
+my_test.py
+gen_benchmarks.py
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
