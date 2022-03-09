@@ -3,8 +3,10 @@ import time
 from functools import total_ordering
 from queue import PriorityQueue
 from typing import Any, List, Optional, Tuple, Union
-
-import matplotlib.pyplot as plt
+try:
+    import matplotlib.pyplot as plt
+except:
+    print("No matpotlib installed")
 import numpy as np
 
 #############################################

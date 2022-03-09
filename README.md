@@ -5,6 +5,8 @@ Implement one multi-pin net detailed routing using A* search on CPU.
  * Python >= 3.6.6
  * Numpy >= 1.17.0
    * Install with this command: `pip3 install numpy --user`
+ * tqdm >= 4.63.0
+   * Install with this command: `pip3 install tqdm --user`
  * matplotlib >= 3.5.0 (Optional, intallation might fail on ECE LRC)
    * Install with this command: `pip3 install matplotlib --user`
    * This is helpful for debugging, you might want to plot on your own computer.

@@ -54,7 +54,7 @@ def evaluate(
                     filepath=os.path.join(output_root, os.path.basename(benchmark)[:-4] + "_sol.png"),
                 )
             if profile:
-                profiling = solver.profile(n_runs=3)
+                profiling = solver.profile(n_runs=5)
             else:
                 profiling = 0, 0
             output_path = os.path.join(output_root, os.path.basename(benchmark))
