@@ -111,7 +111,7 @@ Implement one multi-pin net detailed routing using A* search on CPU.
     solver = A_Star_Search()
     solver.read_benchmark(benchmark_path)
     solution = solver.solve()solver.plot_solution(solution, os.path.join(output_root, f"example_{idx}_sol.png"))
-    profiling = solver.profile(n_runs=3) # ignore memory for now. runtime will be gradedprofiling = solver.profile(n_runs=3) # ignore memory for now. runtime will be graded
+    profiling = solver.profile(n_runs=3) # ignore memory for now. runtime will be graded
     solver.dump_output_file(*solution, *profiling, output_path)
   ```
 * Use `pdb` or print function to debug your code.
