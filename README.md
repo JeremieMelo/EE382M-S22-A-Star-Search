@@ -126,7 +126,7 @@ Implement one 2-pin net detailed routing using A* search on CPU.
   * `_find_nearest_target_dist()`: heuristic cost used in A star search. Please use this as the `h(x)` cost.
   * `_backtrack()`: backtrack the path from the target node you searched to the source node. Please use this after your program found one target node.
   * `_merge_path()`: merge point-wise path to vector representation. Please use this to convert your final point-wise path solution.
-  * `_has_bend()`: when selecting which neighbor node to update first, please use this as the secondary metric to prefer path with less turns or bends. Otherwise, you will get zig-zag path, which is not preferred.
+  * `_has_bend()`: **A tip here: when determine whether the neighbor node need to be updated, please use `bend_count` as the secondary metric besides the `cost_g`. So your algorithm will prefer path with less turns or bends. Otherwise, you will get zig-zag path, which is not preferred. Note that this does not guarantee minimium bend count, that is why the reference solution has some unnecessary turns. Finding minimum number of bends is more complicated, which is not required for this assignment.**
 * The dumped partition solution should use the original node names in the benchmark file.
 * To ensure a **deterministic** solution in this multi-source multi-target routing problem,
   * Please use the first pin, i.e., `p0`, as the starting node, which is marked as red in the solution plot.
