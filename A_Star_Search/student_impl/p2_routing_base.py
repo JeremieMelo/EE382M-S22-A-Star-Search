@@ -136,7 +136,7 @@ class A_Star_Search_Base(object):
         targets = targets[np.newaxis, ...]  # [1, #tar, 2]
         dist = np.abs(srcs - targets).sum(-1)  # [#srcs, #tar]
         nearest_dist = np.min(dist, axis=1)
-        return nearest_dist * 0.9  # [#tar]
+        return nearest_dist  # [#tar]
 
     # Please do not override this method
     def _backtrack(self, node: GridAstarNode) -> List[Tuple[int]]:
