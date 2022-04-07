@@ -228,6 +228,7 @@ class A_Star_Search_Base(object):
         self,
         sol: Tuple[List[Tuple[Tuple[int], Tuple[int]]], int, List[int], List[int]],
         filepath: str = "solution_vis.png",
+        node_list: List[GridAstarNode]=None,
     ):
         path, wl = sol[0], sol[1]
         grid = self.blockage_map.copy().astype(np.int32)
@@ -240,8 +241,18 @@ class A_Star_Search_Base(object):
         grid[self.pin_pos_y[0], self.pin_pos_x[0]] = 3
         grid[self.pin_pos_y[1:], self.pin_pos_x[1:]] = 2
         plt.imshow(grid, vmin=-1, vmax=3, cmap="RdBu_r")
+        ax = plt.gca()
+        ax.set_xticks(np.arange(0, len(self.blockage_map), 1))
+        ax.set_yticks(np.arange(0, len(self.blockage_map), 1))
+        ax.set_xticks(np.arange(-.5, len(self.blockage_map), 1), minor=True)
+        ax.set_yticks(np.arange(-.5, len(self.blockage_map), 1), minor=True)
+        plt.grid(which='minor', color='black', linestyle='-', linewidth=0.5)
+        if node_list is not None:
+            # print(node_list)
+            for node in node_list:
+                plt.annotate(f"f:{node.cost_f:d}\ng:{node.cost_g:d},b:{node.bend_count:d}\n{node.parent.pos if node.parent is not None else ''}", xy=(node.pos[0]-0.45, node.pos[1]+0.3), fontsize=3)
         plt.title(os.path.basename(filepath)[:-4] + f" WL: {wl}")
-        plt.savefig(filepath, dpi=200)
+        plt.savefig(filepath, dpi=300)
 
     # Please do not override the method
     def verify_solution(self, path: List[Tuple[Tuple[int, int], Tuple[int, int]]]) -> bool:

@@ -122,14 +122,16 @@ def score(
                         success = [benchmark_name, False, "WL_MISMATCH", runtime, used_mem]
                     elif tuple(wl_list) != tuple(ref_wl_list):
                         success = [benchmark_name, False, "WL_LIST_MISMATCH", runtime, used_mem]
-                    elif tuple(n_visited_list) != tuple(ref_n_visited_list):
+                    elif not all(
+                        0.8 * vv <= v <= vv * 1.2 for v, vv in zip(n_visited_list, ref_n_visited_list)
+                    ):
                         success = [benchmark_name, False, "N_VISITED_LIST_MISMATCH", runtime, used_mem]
                     else:
-                        max_ratio = 10 # tolerate 10x slower runtime at most
+                        max_ratio = 10  # tolerate 10x slower runtime at most
                         ratio = runtime / ref_runtime
                         # smaller than 10x the reference runtime: no penalty
                         # larger than the threshold leads to exponential score decay
-                        runtime_weighted_score = np.e ** (1 - max(ratio/max_ratio, 1))
+                        runtime_weighted_score = np.e ** (1 - max(ratio / max_ratio, 1))
                         success = [benchmark_name, runtime_weighted_score, "PASSED", runtime, used_mem]
             except Exception as e:
                 print(f"Fail to score student {eid} solution {benchmark_name}")
