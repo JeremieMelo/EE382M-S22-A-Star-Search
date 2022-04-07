@@ -1,5 +1,5 @@
-# Coding Assignment 2: Multi-Pin Net Detailed Routing using A Star Search
-Implement one multi-pin net detailed routing using A* search on CPU.
+# Coding Assignment 2: 2-Pin Net Detailed Routing using A Star Search
+Implement one 2-pin net detailed routing using A* search on CPU.
 
 # Recommended Python Environment
  * Python >= 3.6.6
@@ -17,61 +17,57 @@ Implement one multi-pin net detailed routing using A* search on CPU.
      * e.g., example_1.txt
      ```bash
         20 20
-        4 7
-        p0 18 1
-        p1 9 13
-        p2 0 8
-        p3 6 6
-        b0 9 8 6 3
-        b1 7 9 8 1
-        b2 8 15 10 2
-        b3 2 14 5 3
-        b4 9 5 8 2
-        b5 2 18 9 1
-        b6 1 1 6 2
+        2 7
+        p0 12 7
+        p1 2 12
+        b0 9 16 4 3
+        b1 9 5 1 12
+        b2 14 5 3 4
+        b3 10 11 2 8
+        b4 4 0 7 2
+        b5 7 4 3 6
+        b6 11 11 6 2
      ```
      * The first row contains the routing grid dimension (W x H), e.g., 20 x 20.
-     * The second row contains the number of pins in the net and number of blockages, e.g., a 4-pin net and 7 rectangular blockages.
+     * The second row contains the number of pins in the net and number of blockages, e.g., a 2-pin net and 7 rectangular blockages.
      * There are #pins rows describing the pin locations:
      ```bash
      PIN_NAME PIN_POS_X PIN_POS_Y
      ```
-     E.g., `p0 18 1` describes a `pin` named `p0` whose position is (18, 1).
+     E.g., `p0 12 7` describes a `pin` named `p0` whose position is (12, 7).
      * The rest #blockages rows describe the position and dimension of the rectangular blockages.
      ```bash
      BLOCKAGE_NAME POS_X_LEFT POS_Y_BOTTOM SIZE_X SIZE_Y
      ```
-     E.g., `b0 9 8 6 3` describes a `6 x 3` blockage whose lower-left corner is at (9, 8).
+     E.g., `b0 9 16 4 3` describes a `4 x 3` blockage whose lower-left corner is at (9, 16).
     * `output`: directory to dump out your partition solution.
       * For a student with EID: `xxxxx`, all solution files will be dumped to `output/xxxxx/`. The solution file will have the same file name as the benchmark file, e.g., `output/xxxxx/example_1.txt`
       * `output/reference`: contains ground truth solutions to the example benchmarks given to you.
       * The format of the routing solution file is as follows,
       ```bash
-        7
-        18 1 7 1
-        7 1 7 6
-        7 6 6 6
-        6 6 0 6
-        0 6 0 8
-        6 6 6 13
-        6 13 9 13
-        38
-        18 9 11
-        59 20 31
-        0.006187280019124349
+        4
+        12 7 10 7
+        10 7 10 3
+        10 3 2 3
+        2 3 2 12
+        23
+        23
+        72
+        0.004096174240112304
         0
+
       ```
-      * The first row is the number of straight routing paths |P| contained in the routing path P, e.g., |P|=`7` for this benchmark.
+      * The first row is the number of straight routing paths |P| contained in the routing path P, e.g., |P|=`4` for this benchmark.
       * The next |P| rows describes the routing wires. Each row follows,
       ```bash
        SRC_NODE_X SRC_NODE_Y TAR_NODE_X TAR_NODE_Y
       ```
-      * E.g., `18 1 7 1` is a vector pointing from (18, 1) to (7, 1).
+      * E.g., `12 7 10 7` is a vector pointing from (12, 7) to (10, 7).
       * The next row contains the total routed wirelength `wl` corresponding to the above routing solution
       * Then, the next row contains a list of routed wirelength for each path connecting one target.
-        * E.g., `18 9 11` means there are 3 paths in the 4-pin net. Their wirelengths are 18, 9, and 11, respectively.
+        * E.g., `23` means there is 1 path in the 2-pin net. The wirelength is 23.
       * Then, the next row contains a list of number of visited nodes in each iteration.
-        * E.g., `59 20 31` means there are 3 iterations in the 4-pin net routing program, and each iteration visited 59, 20, and 31 nodes, respectively
+        * E.g., `72` means there is 1 iteration in the 2-pin net routing program, and the iteration visited 72 nodes.
       * The next row is the average runtime in second (**Important grading metric**)
       * The last row is the used memory (Can ignore this, just put a 0 there)
     * `student_impl`: directory to store algorithm implementations.
@@ -125,7 +121,6 @@ Implement one multi-pin net detailed routing using A* search on CPU.
 * 5 exmaple benchmarks will be provided.
 
 # Important Notes
-* For multi-pin net routing, please use the greedy heuristic introduced in the lecture, i.e., starting from one pin, find the path to the nearest target -> Set all nodes along the path as sources, and launch another A star search engine from those sources to find the nearest target. Repeat this until all pins are connected.
 * Please use the given `GridAstarNode` for each routing grid node and `PriorityQueue` for the visited node selection.
 * Please utilize the given methods in the base class.
   * `_find_nearest_target_dist()`: heuristic cost used in A star search. Please use this as the `h(x)` cost.
@@ -152,11 +147,11 @@ Implement one multi-pin net detailed routing using A* search on CPU.
 * and
 * your `wl` equals the reference value:
   * `wl == ref_wl`
-* your wl_list satisfies the following condition (the order matters):
+* your wl_list satisfies the following condition:
   * `tuple(wl_list) == tuple(ref_wl_list)`
 * and
-* your number of visited nodes satisfies the following condition (the order matters):
-  * `tuple(n_visited_list) == tuple(ref_n_visited_list)`
+* your number of visited nodes satisfies the following condition:
+  * `all(0.8 * vv <= v <= vv * 1.2 for v, vv in zip(n_visited_list, ref_n_visited_list))`
 * **Runtime Limit** is used for this assignment
   * Each reference solution has a reference average runtime, tested on ECE LRC Daisy, `ref_runtime`
   * Your profiled average runtime `runtime` leads to the following penalty:
