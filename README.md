@@ -139,9 +139,6 @@ Implement one 2-pin net detailed routing using A* search on CPU.
 * your code gives the required return values with the required types without exceptions (For python code only)
 * your code successfully dumps a valid solution file to `output/YOUR_UT_EID` directory
 * and
-* your `path` covers the exact routing grid points as the ground truth:
-  * `set(solver._split_path(path)) == set(solver._split_path(ref_path))`
-* and
 * your path is a valid solution that passes the `verify_solution()` (see `verify_solution()` for details):
   * `solver.verify_solution(path) == True`
 * and
@@ -149,6 +146,9 @@ Implement one 2-pin net detailed routing using A* search on CPU.
   * `wl == ref_wl`
 * your wl_list satisfies the following condition:
   * `tuple(wl_list) == tuple(ref_wl_list)`
+* and
+* the bend count (i.e., \#vectors-1) of your path is smaller or equal to the reference path:
+  * `len(path) <= len(ref_path)`
 * and
 * your number of visited nodes satisfies the following condition:
   * `all(0.8 * vv <= v <= vv * 1.2 for v, vv in zip(n_visited_list, ref_n_visited_list))`

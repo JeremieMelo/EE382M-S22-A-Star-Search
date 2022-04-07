@@ -1,6 +1,7 @@
 import os
 import time
 from functools import total_ordering
+### Please do use this PriorityQueue implementation
 from queue import PriorityQueue
 from typing import Any, List, Optional, Tuple, Union
 try:
@@ -36,7 +37,11 @@ class GridAstarNode:
         self.visited = visited
         self.parent = parent
         self.neighbors = neighbors
-
+    ### This __eq__ and __lt__ function is to make the Node object comparable, so the priority queue knows how to sort nodes.
+    ### A node with smaller cost_f will have higher priority.
+    ### If two nodes have the same cost_f, a node with smaller bend_count will have higher priotity
+    ### If two nodes have the same cost_f and same bend_count. The one pushed into the queue first will have higher priority.
+    ### You do not need to explicitly call __eq__ or __lt__. The priority queue will handle the 'sorting' internally. You just need to push a GridAstarNode into the queue 'queue.put(node)', and pop the lowest cost node out of the queue: 'node = queue.get()'.
     def __eq__(self, other):
         return (self.cost_f, self.bend_count) == (other.cost_f, other.bend_count)
 
@@ -111,6 +116,8 @@ class A_Star_Search_Base(object):
 
     # Please do not override this method
     def _has_bend(self, node: GridAstarNode, neighbor: GridAstarNode) -> bool:
+        ### If three adjacent nodes have the same x coordinates or have the same y coordinates, they are on the same line, then there is no bend. Otherwise, those three nodes form a bend.
+        ### Three nodes mean: node.parent -> node -> neighbor
         if node.parent is not None:
             parent_pos = node.parent.pos
             node_pos = node.pos
@@ -137,6 +144,11 @@ class A_Star_Search_Base(object):
         dist = np.abs(srcs - targets).sum(-1)  # [#srcs, #tar]
         nearest_dist = np.min(dist, axis=1)
         return nearest_dist  # [#tar]
+
+    # Please do not override this method
+    def _find_manhattan_dist_to_target(self, src: Tuple[int, int], target: Tuple[int,int]) -> int:
+        ### Since only 2-pin net is used, you just need to pass the location of a source and a target to this function, and it will return a Manhattan distance. This is easier to use than the _find_nearest_target_dist function.
+        return abs(src[0] - target[0]) + abs(src[1] - target[1])
 
     # Please do not override this method
     def _backtrack(self, node: GridAstarNode) -> List[Tuple[int]]:
