@@ -121,7 +121,7 @@ Implement one 2-pin net detailed routing using A* search on CPU.
 * 5 exmaple benchmarks will be provided.
 
 # Important Notes
-* It is recommended to use the given `GridAstarNode` for each routing grid node and `PriorityQueue` for the visited node selection.
+* It is recommended to use the given `GridAstarNode` for each routing grid node and `PriorityQueue` or `AdvancedPriorityQueue` for the visited node selection.
 * Please try to utilize the given methods in the base class.
   * `_find_nearest_target_dist()`: heuristic cost used in A star search. Please use this as the `h(x)` cost.
   * `_backtrack()`: backtrack the path from the target node you searched to the source node. Please use this after your program found one target node.
