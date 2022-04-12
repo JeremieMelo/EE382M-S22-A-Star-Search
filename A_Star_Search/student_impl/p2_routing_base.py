@@ -1,13 +1,16 @@
 import os
 import time
 from functools import total_ordering
-### Please do use this PriorityQueue implementation
+
 from queue import PriorityQueue
 from typing import Any, List, Optional, Tuple, Union
+
 try:
     import matplotlib.pyplot as plt
 except:
     print("No matpotlib installed")
+from heapq import heapify, heappop, heappush
+
 import numpy as np
 
 #############################################
@@ -15,7 +18,38 @@ import numpy as np
 # Please do not change any code in this file
 #############################################
 
-__all__ = ["GridAstarNode", "A_Star_Search_Base", "PriorityQueue"]
+__all__ = ["GridAstarNode", "A_Star_Search_Base", "PriorityQueue", "AdvancedPriorityQueue"]
+
+
+class AdvancedPriorityQueue(object):
+    def __init__(self):
+        self._heap = []
+        self._table = set()
+        self.id_of = lambda x: id(x)
+
+    def put(self, x):
+        heappush(self._heap, x)
+        self._table.add(self.id_of(x))
+
+    def get(self):
+        item = heappop(self._heap)
+        self._table.remove(self.id_of(item))
+        return item
+
+    def update(self):
+        ## update the PriorityQueue to guarantee a correct internal ordering
+        ## if you update a node that is already in the queue, please call this function.
+        heapify(self._heap)
+
+    def __len__(self):
+        return len(self._heap)
+
+    def empty(self):
+        return len(self._heap) == 0
+
+    def exist(self, x):
+        ## check whether a node is in the queue
+        return self.id_of(x) in self._table
 
 
 @total_ordering
@@ -37,6 +71,7 @@ class GridAstarNode:
         self.visited = visited
         self.parent = parent
         self.neighbors = neighbors
+
     ### This __eq__ and __lt__ function is to make the Node object comparable, so the priority queue knows how to sort nodes.
     ### A node with smaller cost_f will have higher priority.
     ### If two nodes have the same cost_f, a node with smaller bend_count will have higher priotity
@@ -146,7 +181,7 @@ class A_Star_Search_Base(object):
         return nearest_dist  # [#tar]
 
     # Please do not override this method
-    def _find_manhattan_dist_to_target(self, src: Tuple[int, int], target: Tuple[int,int]) -> int:
+    def _find_manhattan_dist_to_target(self, src: Tuple[int, int], target: Tuple[int, int]) -> int:
         ### Since only 2-pin net is used, you just need to pass the location of a source and a target to this function, and it will return a Manhattan distance. This is easier to use than the _find_nearest_target_dist function.
         return abs(src[0] - target[0]) + abs(src[1] - target[1])
 
@@ -240,7 +275,7 @@ class A_Star_Search_Base(object):
         self,
         sol: Tuple[List[Tuple[Tuple[int], Tuple[int]]], int, List[int], List[int]],
         filepath: str = "solution_vis.png",
-        node_list: List[GridAstarNode]=None,
+        node_list: List[GridAstarNode] = None,
     ):
         path, wl = sol[0], sol[1]
         grid = self.blockage_map.copy().astype(np.int32)
@@ -256,13 +291,17 @@ class A_Star_Search_Base(object):
         ax = plt.gca()
         ax.set_xticks(np.arange(0, len(self.blockage_map), 1))
         ax.set_yticks(np.arange(0, len(self.blockage_map), 1))
-        ax.set_xticks(np.arange(-.5, len(self.blockage_map), 1), minor=True)
-        ax.set_yticks(np.arange(-.5, len(self.blockage_map), 1), minor=True)
-        plt.grid(which='minor', color='black', linestyle='-', linewidth=0.5)
+        ax.set_xticks(np.arange(-0.5, len(self.blockage_map), 1), minor=True)
+        ax.set_yticks(np.arange(-0.5, len(self.blockage_map), 1), minor=True)
+        plt.grid(which="minor", color="black", linestyle="-", linewidth=0.5)
         if node_list is not None:
             # print(node_list)
             for node in node_list:
-                plt.annotate(f"f:{node.cost_f:d}\ng:{node.cost_g:d},b:{node.bend_count:d}\n{node.parent.pos if node.parent is not None else ''}", xy=(node.pos[0]-0.45, node.pos[1]+0.3), fontsize=3)
+                plt.annotate(
+                    f"f:{node.cost_f:d}\ng:{node.cost_g:d},b:{node.bend_count:d}\n{node.parent.pos if node.parent is not None else ''}",
+                    xy=(node.pos[0] - 0.45, node.pos[1] + 0.3),
+                    fontsize=3,
+                )
         plt.title(os.path.basename(filepath)[:-4] + f" WL: {wl}")
         plt.savefig(filepath, dpi=300)
 
