@@ -112,7 +112,7 @@ def score(
                     ref_used_mem,
                 ) = solver.load_solution(ref_output_path)
 
-                if len(path) > len(ref_path):
+                if len(path) > len(ref_path) + 2:
                     success = [benchmark_name, False, "TOO_MANY_BENDS", runtime, used_mem]
                 else:
                     flag, note = solver.verify_solution(path)
