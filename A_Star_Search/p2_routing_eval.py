@@ -123,7 +123,7 @@ def score(
                     elif tuple(wl_list) != tuple(ref_wl_list):
                         success = [benchmark_name, False, "WL_LIST_MISMATCH", runtime, used_mem]
                     elif not all(
-                        0.8 * vv <= v <= vv * 1.2 for v, vv in zip(n_visited_list, ref_n_visited_list)
+                        0.7 * vv <= v <= vv * 1.3 for v, vv in zip(n_visited_list, ref_n_visited_list)
                     ):
                         success = [benchmark_name, False, "N_VISITED_LIST_MISMATCH", runtime, used_mem]
                     else:
