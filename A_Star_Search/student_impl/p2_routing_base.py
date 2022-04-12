@@ -38,7 +38,7 @@ class AdvancedPriorityQueue(object):
 
     def update(self):
         ## update the PriorityQueue to guarantee a correct internal ordering
-        ## if you update a node that is already in the queue, please call this function.
+        ## if you updated a node that is already in the queue, please call this function after you made the modification.
         heapify(self._heap)
 
     def __len__(self):
